@@ -1,0 +1,18 @@
+<configuration>
+
+    <property name="LOG_PATTERN" value="%d{HH:mm:ss} [%-5level] %logger{36} - %msg%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="com.homework.userservice" level="DEBUG"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
