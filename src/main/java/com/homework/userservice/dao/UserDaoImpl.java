@@ -3,6 +3,7 @@ package com.homework.userservice.dao;
 import com.homework.userservice.entity.User;
 import com.homework.userservice.util.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,11 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
+    private final SessionFactory sessionFactory;
+
+    public UserDaoImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public void save(User user) {
