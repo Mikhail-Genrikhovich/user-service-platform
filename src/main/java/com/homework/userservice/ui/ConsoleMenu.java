@@ -1,15 +1,21 @@
 package com.homework.userservice.ui;
 
 import com.homework.userservice.service.UserService;
-import com.homework.userservice.service.UserServiceImpl;
 import com.homework.userservice.util.UserValidator;
 
 import java.util.Scanner;
 
 public class ConsoleMenu {
 
-    private final Scanner scanner = new Scanner(System.in);
-    private final UserService userService = new UserServiceImpl();
+    private final Scanner scanner;
+    private final UserService userService;
+
+    public ConsoleMenu(Scanner scanner, UserService userService) {
+        this.scanner = scanner;
+        this.userService = userService;
+    }
+
+
 
     public void start() {
         System.out.println("\n" + "=".repeat(30));

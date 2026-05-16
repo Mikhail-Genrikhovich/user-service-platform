@@ -1,7 +1,6 @@
 package com.homework.userservice.service;
 
 import com.homework.userservice.dao.UserDao;
-import com.homework.userservice.dao.UserDaoImpl;
 import com.homework.userservice.entity.User;
 
 
@@ -10,7 +9,11 @@ import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
 
-    private final UserDao userDao = new UserDaoImpl();
+    private final UserDao userDao;
+
+    public UserServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public void createUser(String name, String email, int age) {
