@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserDaoImplTest {
 
     @Container
-    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15");
+    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16");
 
     static SessionFactory sessionFactory;
 
