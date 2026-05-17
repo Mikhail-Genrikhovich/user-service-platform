@@ -77,7 +77,7 @@ public enum MenuOption {
             long id = UserValidator.readId("Введите ID пользователя: ", scanner);
 
             if (userService.deleteUser(id)) {
-                System.out.println("Пользоветель успешно удален.");
+                System.out.println("Пользователь успешно удален.");
             } else {
                 System.out.println("Пользователь не найден.");
             }

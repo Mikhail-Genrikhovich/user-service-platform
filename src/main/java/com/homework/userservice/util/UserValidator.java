@@ -67,7 +67,7 @@ public class UserValidator {
         while (true) {
             try {
                 int age = Integer.parseInt(scanner.nextLine().trim());
-                if (age >= 0 && age <= range) {
+                if (age >= 1 && age <= range) {
                     return age;
                 }
                 System.out.println("Введено отрицательное или слишком большое значение. Повторите ввод.");
