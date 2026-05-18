@@ -3,6 +3,7 @@ package com.homework.userservice.dao;
 import com.homework.userservice.entity.User;
 import com.homework.userservice.util.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +14,17 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
+    private final SessionFactory sessionFactory;
+
+    public UserDaoImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public void save(User user) {
         Transaction transaction = null;
 
-        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try(Session session = this.sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(user);
             transaction.commit();
@@ -34,7 +40,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findById(Long id) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+        try (Session session = this.sessionFactory.openSession()){
             User user = session.get(User.class, id);
             if (user != null) {
                 logger.info("Пользователь найден: {}", user);
@@ -51,7 +57,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> findAll() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession();) {
+        try (Session session = this.sessionFactory.openSession()) {
         List<User> users = session.createQuery("FROM User", User.class).list();
         logger.info("Получено пользователей: {}", users.size());
         return users;
@@ -66,7 +72,7 @@ public class UserDaoImpl implements UserDao {
     public void update(User user) {
         Transaction transaction = null;
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+        try (Session session = this.sessionFactory.openSession()){
             transaction = session.beginTransaction();
             session.merge(user);
             transaction.commit();
@@ -84,7 +90,7 @@ public class UserDaoImpl implements UserDao {
     public void delete(Long id) {
         Transaction transaction = null;
 
-        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try(Session session = this.sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             User user = session.get(User.class, id);
             if (user != null) {
@@ -99,7 +105,7 @@ public class UserDaoImpl implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            logger.info("Ошибка при удалении пользователя: {}", e.getMessage());
+            logger.error("Ошибка при удалении пользователя: {}", e.getMessage());
             throw new RuntimeException("Не удалось удалить пользователя.", e);
         }
     }
