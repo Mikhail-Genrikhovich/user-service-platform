@@ -1,35 +1,12 @@
 package com.homework.userservice;
 
-import com.homework.userservice.dao.UserDao;
-import com.homework.userservice.dao.UserDaoImpl;
-import com.homework.userservice.service.UserService;
-import com.homework.userservice.service.UserServiceImpl;
-import com.homework.userservice.ui.ConsoleMenu;
-import com.homework.userservice.util.HibernateUtil;
-import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Scanner;
-
+@SpringBootApplication
 public class Main {
-
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private static final Scanner scanner = new Scanner(System.in);
-    private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-    private static final UserDao userDao = new UserDaoImpl(sessionFactory);
-    private static final UserService userService = new UserServiceImpl(userDao);
-
     public static void main(String[] args) {
-        logger.info("Запуск приложения.");
 
-        try {
-            ConsoleMenu consoleMenu = new ConsoleMenu(scanner, userService);
-            consoleMenu.start();
-        } finally {
-            HibernateUtil.shutdown();
-            scanner.close();
-            logger.info("Приложение завершено.");
-        }
+        SpringApplication.run(Main.class, args);
     }
 }

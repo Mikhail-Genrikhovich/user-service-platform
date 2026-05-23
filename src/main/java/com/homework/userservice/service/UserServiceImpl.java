@@ -1,63 +1,77 @@
 package com.homework.userservice.service;
 
-import com.homework.userservice.dao.UserDao;
+import com.homework.userservice.dto.UserRequestDto;
+import com.homework.userservice.dto.UserResponseDto;
 import com.homework.userservice.entity.User;
+import com.homework.userservice.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Service
 public class UserServiceImpl implements UserService {
 
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+
+    @Override
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+        User user = new User(userRequestDto.getName(),
+                userRequestDto.getEmail(),
+                userRequestDto.getAge());
+        User saved = userRepository.save(user);
+        return toDto(saved);
     }
 
     @Override
-    public void createUser(String name, String email, int age) {
-        User user = new User(name, email, age);
-        userDao.save(user);
+    public UserResponseDto findUserById(long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден: " + id));
+        return toDto(user);
     }
 
     @Override
-    public Optional<User> findUserById(long id) {
-        return userDao.findById(id);
+    public List<UserResponseDto> findAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<User> findAllUsers() {
-        return userDao.findAll();
+    public UserResponseDto updateUser(long id, UserRequestDto userRequestDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден: " + id));
+
+        user.setName(userRequestDto.getName());
+        user.setEmail(userRequestDto.getEmail());
+        user.setAge(userRequestDto.getAge());
+
+        User updated = userRepository.save(user);
+        return toDto(updated);
     }
 
     @Override
-    public boolean updateUser(long id, String name, String email, int age) {
-        Optional<User> existing = userDao.findById(id);
-
-        if (existing.isEmpty()) {
-            return false;
+    public void delete(long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("Пользователь не найден: " + id);
         }
-
-        User user = existing.get();
-
-        user.setName(name);
-        user.setEmail(email);
-        user.setAge(age);
-
-        userDao.update(user);
-        return true;
+        userRepository.deleteById(id);
     }
 
-    @Override
-    public boolean deleteUser(long id) {
-        Optional<User> existing = userDao.findById(id);
-
-        if (existing.isEmpty()){
-            return false;
-        }
-
-        userDao.delete(id);
-        return true;
+    private UserResponseDto toDto(User user) {
+        UserResponseDto userResponseDto = new UserResponseDto();
+        userResponseDto.setId(user.getId());
+        userResponseDto.setName(user.getName());
+        userResponseDto.setEmail(user.getEmail());
+        userResponseDto.setAge(user.getAge());
+        userResponseDto.setCreateAt(user.getCreatedAt());
+        return userResponseDto;
     }
 }
