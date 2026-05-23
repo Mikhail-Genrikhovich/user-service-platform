@@ -9,6 +9,12 @@ public class UserRequestDto {
     public UserRequestDto() {
     }
 
+    public UserRequestDto(String name, String email, int age) {
+        this.name = name;
+        this.email = email;
+        this.age = age;
+    }
+
     public String getName() {
         return name;
     }

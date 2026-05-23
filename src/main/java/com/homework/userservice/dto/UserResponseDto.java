@@ -13,6 +13,14 @@ public class UserResponseDto {
     public UserResponseDto() {
     }
 
+    public UserResponseDto(Long id, String name, String email, int age, LocalDateTime createAt) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.age = age;
+        this.createAt = createAt;
+    }
+
     public Long getId() {
         return id;
     }
