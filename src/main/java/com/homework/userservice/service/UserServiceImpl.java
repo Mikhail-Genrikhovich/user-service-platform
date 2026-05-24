@@ -3,6 +3,7 @@ package com.homework.userservice.service;
 import com.homework.userservice.dto.UserRequestDto;
 import com.homework.userservice.dto.UserResponseDto;
 import com.homework.userservice.entity.User;
+import com.homework.userservice.exception.UserNotFoundException;
 import com.homework.userservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto findUserById(long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден: " + id));
+                .orElseThrow(() -> new UserNotFoundException(id));
         return toDto(user);
     }
 
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto updateUser(long id, UserRequestDto userRequestDto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден: " + id));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
         user.setName(userRequestDto.getName());
         user.setEmail(userRequestDto.getEmail());
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(long id) {
         if (!userRepository.existsById(id)) {
-            throw new RuntimeException("Пользователь не найден: " + id);
+            throw new UserNotFoundException(id);
         }
         userRepository.deleteById(id);
     }

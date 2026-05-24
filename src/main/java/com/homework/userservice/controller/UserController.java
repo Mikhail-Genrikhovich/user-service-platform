@@ -3,6 +3,7 @@ package com.homework.userservice.controller;
 import com.homework.userservice.dto.UserRequestDto;
 import com.homework.userservice.dto.UserResponseDto;
 import com.homework.userservice.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto request) {
+    public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserRequestDto request) {
         UserResponseDto created = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
@@ -39,7 +40,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable long id,
-                                                      @RequestBody UserRequestDto request) {
+                                                      @Valid @RequestBody UserRequestDto request) {
         UserResponseDto updated = userService.updateUser(id, request);
         return ResponseEntity.ok(updated);
     }

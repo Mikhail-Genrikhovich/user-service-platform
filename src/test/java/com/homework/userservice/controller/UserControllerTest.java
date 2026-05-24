@@ -3,6 +3,7 @@ package com.homework.userservice.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homework.userservice.dto.UserRequestDto;
 import com.homework.userservice.dto.UserResponseDto;
+import com.homework.userservice.exception.UserNotFoundException;
 import com.homework.userservice.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+public class    UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -66,6 +67,20 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Создание User с невалидными данными. Должен вернуть 400.")
+    void createUser_shouldReturnBadRequest() throws Exception {
+        UserRequestDto invalidRequest = new UserRequestDto("", "это не email", -1);
+
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.name").exists())
+                .andExpect(jsonPath("$.email").exists())
+                .andExpect(jsonPath("$.age").exists());
+    }
+
+    @Test
     @DisplayName("Получение User по ID. Возвращает User если он существует.")
     void getUserById_shouldReturnUser() throws Exception {
         when(userService.findUserById(1L)).thenReturn(userResponseDto);
@@ -75,6 +90,16 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Михаил"))
                 .andExpect(jsonPath("$.email").value("mikhail0096@gmail.com"));
+    }
+
+    @Test
+    @DisplayName("Получение User по несуществующему ID. Должен вернуть 404.")
+    void getUserById_shouldReturnNotFound() throws Exception {
+        when(userService.findUserById(99L)).thenThrow(new UserNotFoundException(99L));
+
+        mockMvc.perform(get("/users/99"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Пользователь не найден: 99"));
     }
 
     @Test
