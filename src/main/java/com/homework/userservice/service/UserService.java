@@ -1,15 +1,16 @@
 package com.homework.userservice.service;
 
-import com.homework.userservice.entity.User;
+import com.homework.userservice.dto.UserRequestDto;
+import com.homework.userservice.dto.UserResponseDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
-    void createUser(String name, String email, int age);
-    Optional<User> findUserById(long id);
-    List<User> findAllUsers();
-    boolean updateUser(long id, String name, String email, int age);
-    boolean deleteUser(long id);
+    UserResponseDto createUser(UserRequestDto userRequestDto);
+    UserResponseDto findUserById(long id);
+    List<UserResponseDto> findAllUsers();
+    UserResponseDto updateUser(long id, UserRequestDto userRequestDto);
+    void delete(long id);
 }
+
