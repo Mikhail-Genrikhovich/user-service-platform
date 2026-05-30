@@ -26,6 +26,7 @@
     <!-- Список модулей -->
     <modules>
         <module>user-service</module>
+        <module>notification-service</module>
     </modules>
 
 </project>
