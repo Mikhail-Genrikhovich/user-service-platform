@@ -13,7 +13,7 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
-    private String froEmail;
+    private String fromEmail;
 
     public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
@@ -24,10 +24,14 @@ public class EmailService {
     }
 
     public void sendEmailFromEvent(UserEvent event) {
+        if (event == null || event.getEmail() == null || event.getEventType() == null) {
+            return;
+        }
+
         String message;
 
         if ("CREATED".equals(event.getEventType())) {
-            message = "Здравствуйте! Ваш аккаунт был успешно создан.";
+            message = "Здравствуйте! Ваш аккаунт на сайте был успешно создан.";
         } else if ("DELETED".equals(event.getEventType())) {
             message = "Здравствуйте! Ваш аккаунт был удалён.";
         } else {
@@ -39,7 +43,7 @@ public class EmailService {
 
     private void sendMail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(froEmail);
+        message.setFrom(fromEmail);
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);

@@ -2,6 +2,7 @@ package com.homework.notificationservice.controller;
 
 import com.homework.notificationservice.dto.EmailRequest;
 import com.homework.notificationservice.service.EmailService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,7 @@ public class NotificationController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendEmail(@RequestBody EmailRequest request) {
+    public ResponseEntity<String> sendEmail(@RequestBody @Valid EmailRequest request) {
         emailService.sendEmail(request);
         return ResponseEntity.ok("Письмо успешно отправлено на: " + request.getEmail());
     }
