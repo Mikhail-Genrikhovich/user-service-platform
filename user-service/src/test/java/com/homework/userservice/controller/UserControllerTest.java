@@ -116,8 +116,8 @@ public class    UserControllerTest {
 
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(4))
-                .andExpect(jsonPath("$[0].name").value("Михаил"));
+                .andExpect(jsonPath("$._embedded.userResponseDtoList.length()").value(4))
+                .andExpect(jsonPath("$._embedded.userResponseDtoList[0].name").value("Михаил"));
     }
 
     @Test
