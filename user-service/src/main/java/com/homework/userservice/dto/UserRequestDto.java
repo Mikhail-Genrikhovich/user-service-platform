@@ -1,16 +1,21 @@
 package com.homework.userservice.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
+@Schema(description = "Данные для создания или обновления пользователя")
 public class UserRequestDto {
 
+    @Schema(description = "Имя пользователя", example = "Михаил")
     @NotBlank(message = "Имя не может быть пустым.")
     private String name;
 
+    @Schema(description = "Email пользователя", example = "mikhail0096@gmail.com")
     @NotBlank(message = "Email не может быть пустым.")
     @Email(message = "Некорректный формат email.")
     private String email;
 
+    @Schema(description = "Возраст пользователя", example = "29")
     @NotNull(message = "Возраст не может быть пустым")
     @Min(value = 1, message = "Возраст должен быть больше 0")
     @Max(value = 100, message = "Возраст не должен быть больше 100")
